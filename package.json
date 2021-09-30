@@ -1,0 +1,45 @@
+{
+  "name": "RockLee",
+  "version": "1.0.0",
+  "main": "content.js",
+  "scripts": {
+    "build": "webpack",
+    "start": "webpack-dev-server --hot",
+    "lint": "eslint src"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@babel/core": "^7.15.5",
+    "@babel/eslint-parser": "^7.15.7",
+    "@babel/preset-env": "^7.7.7",
+    "@babel/preset-react": "^7.7.4",
+    "babel-loader": "^8.0.6",
+    "clean-webpack-plugin": "^3.0.0",
+    "css-loader": "^3.4.0",
+    "cytoscape": "^3.12.1",
+    "cytoscape-cose-bilkent": "^4.1.0",
+    "eslint-config-prettier": "^8.3.0",
+    "eslint-plugin-prettier": "^4.0.0",
+    "file-loader": "^6.2.0",
+    "mini-css-extract-plugin": "^0.9.0",
+    "prettier": "^2.4.1",
+    "style-loader": "^1.1.1",
+    "webpack": "^4.41.4",
+    "webpack-cli": "^3.3.10",
+    "webpack-dev-server": "^3.10.1"
+  },
+  "devDependencies": {
+    "eslint": "^7.32.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Doohwancho/RockLee.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Doohwancho/RockLee/issues"
+  },
+  "homepage": "https://github.com/Doohwancho/RockLee#readme",
+  "description": ""
+}

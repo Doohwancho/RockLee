@@ -1,0 +1,32 @@
+{
+  "author":"Developer",
+  "name": "성장형 캐릭터",
+  "version": "1.0.0",
+  "manifest_version": 2,
+  "description": "gamification extended to reality",
+  "browser_action" : {
+    "default_title":"Just Do It",
+    "default_popup": "popup.html"
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "https://github.com/*"
+      ],
+      "css": [
+        "dist/style.css"
+      ],
+      "js": [
+        "dist/content.bundle.js", "./popup.js"
+      ]
+    }
+  ],
+  "web_accessible_resources": [
+    "dist/*"
+  ],
+  "icons": {
+    "128": "src/images/icon/RockLee.png"
+  },
+  "permissions": ["tabs", "storage"],
+  "homepage_url":"https://github.com/doohwancho"
+}

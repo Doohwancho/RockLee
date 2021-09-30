@@ -1,0 +1,8 @@
+src/originalImages/
+node_modules/
+dist/
+src/content_extended.js
+src/model/skillData.js
+src/model/_data1.js
+src/model/_data2.js
+src/model/_data3.js
