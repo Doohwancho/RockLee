@@ -1,8 +1,8 @@
 
 # What is this?
 
-![Alt text](./document/readme-picture1.gif?raw=true "sample_image1")
-![Alt text](./documnet/readme-picture2.png?raw=true "sample_image2")
+![Alt text1](./document/readme-picture1.gif?raw=true "sample_image1")
+![Alt text2](./documnet/readme-picture2.PNG?raw=true "sample_image2")
 
 1. commit할 수록 록리가 점점 각성한다.
 2. visualize skill tree
