@@ -19,7 +19,7 @@ import RockLeeProfile7 from "/src/images/profile/ProfileRockLee7.png";
 
 //data files
 import csData from "./model/csData.js";
-import learnData from "./model/learnData.js";
+
 
 /***************************************************
  * 1. init
@@ -149,19 +149,11 @@ function insertButtonForModal() {
   csBtn.className = "btn btn-block";
   csBtn.innerHTML = "Skill Tree";
 
-  //button for learnData
-  let learnBtn = document.createElement("button");
-  learnBtn.type = "button";
-  learnBtn.className = "btn btn-block";
-  learnBtn.innerHTML = "Learn";
-
   //add buttons to parent node
   let parent = document.body.querySelector(".js-profile-editable-edit-button");
   parent.insertAdjacentElement("afterend", csBtn);
-  parent.insertAdjacentElement("afterend", learnBtn);
 
   MYAPP.modal.csBtn = csBtn;
-  MYAPP.modal.learnBtn = learnBtn;
 }
 
 function insertModal() {
@@ -222,13 +214,6 @@ function cssForModal() {
 function addEventListenerForModal() {
   MYAPP.modal.csBtn.onclick = function () {
     cytoscapeExecute(csData);
-    MYAPP.modal.modal.style.display = "block";
-    MYAPP.cytoscape.cy.resize();
-    MYAPP.cytoscape.cy.fit();
-  };
-
-  MYAPP.modal.learnBtn.onclick = function () {
-    cytoscapeExecute(learnData);
     MYAPP.modal.modal.style.display = "block";
     MYAPP.cytoscape.cy.resize();
     MYAPP.cytoscape.cy.fit();

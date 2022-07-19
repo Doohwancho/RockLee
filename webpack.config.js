@@ -5,7 +5,7 @@ const { CleanWebpackPlugin } = require("clean-webpack-plugin");
 // build 폴더 자동 정리를 위한 플러그인 입니다
 
 module.exports = {
-  entry: "./src/content_extended.js",
+  entry: "./src/content.js",
   output: {
     filename: "content.bundle.js",
     path: path.resolve(__dirname + "/dist")
