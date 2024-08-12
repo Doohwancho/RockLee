@@ -91,25 +91,45 @@ function getFormattedToday() {
 /**
  * today's number of commit 을 observer로 얻어 그에 맞는 RockLee.gif를 렌더링 하는 함수
  * 기존에 페이지 로드가 끝난 시점에 commit number를 가져오는 방식에서, observer 방식으로 바뀜 
+ * 2단계에 거쳐서 today's commit number을 구함
+ * 1단계) today's commit number가 담긴 DOM의 id를 가지고 있는 DOM을 observer로 받음
+ * 2단계) 1단계에서 찾은 id를 가지는 DOM을 observer로 받아서 today's commit number를 뽑아낸다. 
  */
 function setupCommitNumberObserver() {
+  let todaysCommitTagId;
+
   // Create a MutationObserver to watch for changes in the DOM
   const commitNumberObserver = new MutationObserver((mutationsList, observer) => {
     // Check if the element is available
     const element = document.querySelector('[data-date="' + MYAPP.src.formattedToday + '"]');
+
     if (element) {
         // If the element is found, get the attribute and disconnect the observer
-        let todaysCommitTagId = element.getAttribute('aria-labelledby');
-
-        let commitNumber = document.querySelector("#" + todaysCommitTagId).textContent.split(" ")[0];
-        commitNumber = commitNumber === 'No' ? 0 : commitNumber;
-
-        MYAPP.sr.commitNumber = commitNumber > 7 ? 7 : commitNumber;    
+        todaysCommitTagId = element.getAttribute('aria-labelledby');
 
         observer.disconnect(); // Stop observing once the element is found
+        
+        if(todaysCommitTagId) {
+          //start second observer to find DOM that has today's commit number with id found by first observer
+          specificElementObserver.observe(document, { childList: true, subtree: true });
+        }
+    }
+  });
 
-        injectLee();
-        changeProfileToLee();
+  // Create a second MutationObserver for the specific element
+  const specificElementObserver = new MutationObserver((mutationsList, observer) => {
+    const specificElement = document.querySelector("#" + todaysCommitTagId);
+
+    if (specificElement) {
+      let commitNumber = specificElement.textContent.split(" ")[0];
+      commitNumber = commitNumber === 'No' ? 0 : commitNumber;
+
+      MYAPP.src.commitNumber = commitNumber > 7 ? 7 : commitNumber;    
+
+      observer.disconnect(); // Stop observing once the element is found
+
+      injectLee();
+      changeProfileToLee();
     }
   });
 

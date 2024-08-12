@@ -193,21 +193,46 @@ function getFormattedToday() {
 /**
  * today's number of commit 을 observer로 얻어 그에 맞는 RockLee.gif를 렌더링 하는 함수
  * 기존에 페이지 로드가 끝난 시점에 commit number를 가져오는 방식에서, observer 방식으로 바뀜 
+ * 2단계에 거쳐서 today's commit number을 구함
+ * 1단계) today's commit number가 담긴 DOM의 id를 가지고 있는 DOM을 observer로 받음
+ * 2단계) 1단계에서 찾은 id를 가지는 DOM을 observer로 받아서 today's commit number를 뽑아낸다. 
  */
 
 
 function setupCommitNumberObserver() {
-  // Create a MutationObserver to watch for changes in the DOM
+  var todaysCommitTagId; // Create a MutationObserver to watch for changes in the DOM
+
   var commitNumberObserver = new MutationObserver(function (mutationsList, observer) {
     // Check if the element is available
     var element = document.querySelector('[data-date="' + MYAPP.src.formattedToday + '"]');
+    console.log("element: " + element);
 
     if (element) {
       // If the element is found, get the attribute and disconnect the observer
-      var todaysCommitTagId = element.getAttribute('aria-labelledby');
-      var commitNumber = document.querySelector("#" + todaysCommitTagId).textContent.split(" ")[0];
+      todaysCommitTagId = element.getAttribute('aria-labelledby');
+      console.log("todaysCommitTagId: " + todaysCommitTagId);
+      observer.disconnect(); // Stop observing once the element is found
+
+      if (todaysCommitTagId) {
+        //start second observer to find DOM that has today's commit number with id found by first observer
+        specificElementObserver.observe(document, {
+          childList: true,
+          subtree: true
+        });
+      }
+    }
+  }); // Create a second MutationObserver for the specific element
+
+  var specificElementObserver = new MutationObserver(function (mutationsList, observer) {
+    console.log("todaysCommitTagId: " + todaysCommitTagId);
+    var specificElement = document.querySelector("#" + todaysCommitTagId);
+    console.log("specificElement: " + specificElement);
+
+    if (specificElement) {
+      var commitNumber = specificElement.textContent.split(" ")[0];
       commitNumber = commitNumber === 'No' ? 0 : commitNumber;
-      MYAPP.sr.commitNumber = commitNumber > 7 ? 7 : commitNumber;
+      console.log("commitNumber : " + commitNumber);
+      MYAPP.src.commitNumber = commitNumber > 7 ? 7 : commitNumber;
       observer.disconnect(); // Stop observing once the element is found
 
       injectLee();
