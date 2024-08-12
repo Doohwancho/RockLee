@@ -190,10 +190,35 @@ function getFormattedToday() {
   var today = year + "-" + (month > 9 ? month : "0" + month) + "-" + (date > 9 ? date : "0" + date);
   MYAPP.src.formattedToday = today;
 }
+/**
+ * today's number of commit 을 observer로 얻어 그에 맞는 RockLee.gif를 렌더링 하는 함수
+ * 기존에 페이지 로드가 끝난 시점에 commit number를 가져오는 방식에서, observer 방식으로 바뀜 
+ */
 
-function getTodayCommitNumber() {
-  var commitNumber = document.querySelector('[data-date="' + MYAPP.src.formattedToday + '"]').dataset.count;
-  MYAPP.src.commitNumber = commitNumber > 7 ? 7 : commitNumber;
+
+function setupCommitNumberObserver() {
+  // Create a MutationObserver to watch for changes in the DOM
+  var commitNumberObserver = new MutationObserver(function (mutationsList, observer) {
+    // Check if the element is available
+    var element = document.querySelector('[data-date="' + MYAPP.src.formattedToday + '"]');
+
+    if (element) {
+      // If the element is found, get the attribute and disconnect the observer
+      var todaysCommitTagId = element.getAttribute('aria-labelledby');
+      var commitNumber = document.querySelector("#" + todaysCommitTagId).textContent.split(" ")[0];
+      commitNumber = commitNumber === 'No' ? 0 : commitNumber;
+      MYAPP.sr.commitNumber = commitNumber > 7 ? 7 : commitNumber;
+      observer.disconnect(); // Stop observing once the element is found
+
+      injectLee();
+      changeProfileToLee();
+    }
+  }); // Start observing the document for changes
+
+  commitNumberObserver.observe(document, {
+    childList: true,
+    subtree: true
+  });
 }
 /***************************************************
  * 3. Rock Lee Image
@@ -201,27 +226,14 @@ function getTodayCommitNumber() {
 
 
 function injectLee() {
+  //create RockLee gif DOM
   var rockLeeDiv = document.createElement("div");
   rockLeeDiv.className = "rocklee-level".concat(MYAPP.src.commitNumber);
   rockLeeDiv.style.position = "relative";
   rockLeeDiv.style.top = rockLeeDiv.style.left = MYAPP.src.commitNumber + "0%"; //more you commit, more RockLee move towards right
+  //insert RockLee image DOM as first child of mt-4 DOM (right above git commit hitmap calendar)
 
-  MYAPP.src.parent.appendChild(rockLeeDiv);
-  /*
-    //last commit time 구현 이후 쓰기
-      let i = document.createElement("div");
-    i.className = `rocklee-level-1`;
-    parent.appendChild(i);
-      let j = document.createElement("div");
-    j.className = `rocklee-level-2`;
-    parent.appendChild(j);
-      let k = document.createElement("div");
-    k.className = `rocklee-level-3`;
-    parent.appendChild(k);
-      let l = document.createElement("div");
-    l.className = `rocklee-level-4`;
-    parent.appendChild(l);
-    */
+  MYAPP.src.parent.insertBefore(rockLeeDiv, MYAPP.src.parent.firstChild);
 }
 
 function changeProfileToLee() {
@@ -546,27 +558,39 @@ function cytoscapeExecute(data) {
 }
 
 function main() {
+  /*
+    A. setup
+  */
   //1. init
   if (checkValidPage()) return;
   initializeContainer();
   getParent();
-  if (errorCheck()) return; //2. get src
+  if (errorCheck()) return;
+  /*
+    B. crawl number of commits today and render RockLee.gif 
+  */
+  //2. get src
 
-  getFormattedToday();
-  getTodayCommitNumber(); //3. Rock Lee Image
+  getFormattedToday(); // getTodayCommitNumber(); //deleted
 
-  injectLee();
-  changeProfileToLee(); //4. modal
+  setupCommitNumberObserver(); //replaced (DOMContentLoaded 시점에 타겟 DOM이 로드되지 않았기 때문에 observer 방식으로 변경)
+  //3. Rock Lee Image
+  // injectLee(); //setupCommitNumberObserver()안에서 실행되도록 편입됨
+  // changeProfileToLee(); //setupCommitNumberObserver()안에서 실행되도록 편입됨
 
-  insertButtonForModal();
-  insertModal();
-  cssForModal();
-  addEventListenerForModal(); //5. cytoscape.js init
-
-  insertDivForCytoscape();
-  cssForCytoscape(); //6. cytoscape.js execute
-
-  cytoscapeExecute();
+  /*
+    C. graph-formed skill tree
+  */
+  //4. modal for cytoscape skilltree
+  // insertButtonForModal();
+  // insertModal();
+  // cssForModal();
+  // addEventListenerForModal();
+  //5. cytoscape.js init
+  // insertDivForCytoscape();
+  // cssForCytoscape();
+  //6. cytoscape.js execute
+  // cytoscapeExecute();
 }
 
 main();
