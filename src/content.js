@@ -1,24 +1,23 @@
-//cytoscape.js
-import cytoscape from "cytoscape";
-import coseBilkent from "cytoscape-cose-bilkent"; //cose-bilkent layout
-
 //style for spreadsheet image
 import "./style.css";
 
 //image files
 import RockLeeImg from "/src/images/spreadsheets/RockLee2_transparent.gif";
 import RockLettImg2 from "/src/images/spreadsheets/RockLee3_transparent.png";
-import RockLeeProfile0 from "/src/images/profile/ProfileRockLee0.png";
-import RockLeeProfile1 from "/src/images/profile/ProfileRockLee1.png";
-import RockLeeProfile2 from "/src/images/profile/ProfileRockLee2.png";
-import RockLeeProfile3 from "/src/images/profile/ProfileRockLee3.png";
-import RockLeeProfile4 from "/src/images/profile/ProfileRockLee4.png";
-import RockLeeProfile5 from "/src/images/profile/ProfileRockLee5.png";
-import RockLeeProfile6 from "/src/images/profile/ProfileRockLee6.png";
-import RockLeeProfile7 from "/src/images/profile/ProfileRockLee7.png";
+// import RockLeeProfile0 from "/src/images/profile/ProfileRockLee0.png";
+// import RockLeeProfile1 from "/src/images/profile/ProfileRockLee1.png";
+// import RockLeeProfile2 from "/src/images/profile/ProfileRockLee2.png";
+// import RockLeeProfile3 from "/src/images/profile/ProfileRockLee3.png";
+// import RockLeeProfile4 from "/src/images/profile/ProfileRockLee4.png";
+// import RockLeeProfile5 from "/src/images/profile/ProfileRockLee5.png";
+// import RockLeeProfile6 from "/src/images/profile/ProfileRockLee6.png";
+// import RockLeeProfile7 from "/src/images/profile/ProfileRockLee7.png";
 
-//data files
-import csData from "./model/csData.js";
+//cytoscape.js
+// import cytoscape from "cytoscape";
+// import coseBilkent from "cytoscape-cose-bilkent"; //cose-bilkent layout
+//data files for cyytoscape
+// import csData from "./model/csData.js";
 
 
 /***************************************************
@@ -127,7 +126,7 @@ function setupCommitNumberObserver() {
 
       injectLee();
       // changeProfileToLee();
-      fetchGeohotCommits();
+      fetchGeohotCommits();  //내 록리 캐릭터 만든 이후 라이벌의 캐릭터 추가하면 좋은점은, 페이지 로드 도중 div 없으면 에러날 수 있는 확률 방지 및, 내 록리캐릭터가 안떴는데 라이벌 캐릭터만 뜨는 사고 방지 가능 
     }
   });
 
@@ -145,6 +144,22 @@ function fetchGeohotCommits() {
       injectGeohotLee(geohotCommitNumber);
     }
   });
+}
+
+
+/***************************************************
+ * 3. Rock Lee Image
+ */
+
+function injectLee() {
+  //create RockLee gif DOM
+  let rockLeeDiv = document.createElement("div");
+  rockLeeDiv.className = `rocklee-level${MYAPP.src.commitNumber}`; //rocklee-level0 ~ 7 하면, style.css에서   @keyframes rocklee-level-3 { //... } 이 spread image를 .gif로 렌더링 해준다. 
+  rockLeeDiv.style.position = "relative";
+  rockLeeDiv.style.top = rockLeeDiv.style.left = MYAPP.src.commitNumber + "0%"; //more you commit, more RockLee move towards right
+
+  //insert RockLee image DOM as first child of mt-4 DOM (right above git commit hitmap calendar)
+  MYAPP.src.parent.insertBefore(rockLeeDiv, MYAPP.src.parent.firstChild); 
 }
 
 function injectGeohotLee(commitNumber) {
@@ -176,24 +191,9 @@ function injectGeohotLee(commitNumber) {
 }
 
 /***************************************************
- * 3. Rock Lee Image
- */
-
-function injectLee() {
-  //create RockLee gif DOM
-  let rockLeeDiv = document.createElement("div");
-  rockLeeDiv.className = `rocklee-level${MYAPP.src.commitNumber}`;
-  rockLeeDiv.style.position = "relative";
-  rockLeeDiv.style.top = rockLeeDiv.style.left = MYAPP.src.commitNumber + "0%"; //more you commit, more RockLee move towards right
-
-  //insert RockLee image DOM as first child of mt-4 DOM (right above git commit hitmap calendar)
-  MYAPP.src.parent.insertBefore(rockLeeDiv, MYAPP.src.parent.firstChild); 
-}
-
-/***************************************************
  * 4. Modal
  */
-
+/*
 function insertButtonForModal() {
   //button for skillData
   let csBtn = document.createElement("button");
@@ -293,11 +293,12 @@ function addEventListenerForModal() {
     }
   });
 }
+*/
 
 /***************************************************
  * 5. Cytoscape.js
  */
-
+/*
 function insertDivForCytoscape() {
   let cy = document.createElement("div");
   cy.id = "cy";
@@ -452,7 +453,7 @@ function uiUxCytoscape() {
   });
 }
 
-/* mouse in/out highlight function */
+// mouse in/out highlight function 
 
 function mouseInOutHighLightCytoscape() {
   let config = MYAPP.cytoscape.cfg;
@@ -569,6 +570,7 @@ function cytoscapeExecute(data) {
   mouseInOutHighLightCytoscape();
   resizeCytoscape();
 }
+*/
 
 function main() {
   /*
@@ -588,7 +590,7 @@ function main() {
   setupCommitNumberObserver();
 
   /*
-    C. graph-formed skill tree
+    C. graph-formed skill tree (disabled for now)
   */
   //4. modal for cytoscape skilltree
   // insertButtonForModal();
