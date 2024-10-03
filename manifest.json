@@ -21,13 +21,18 @@
       ]
     }
   ],
+  "background": {
+    "scripts": ["background.js"],
+    "persistent": false
+  },
   "web_accessible_resources": [
     "dist/*"
   ],
   "icons": {
     "128": "src/images/icon/RockLee.png"
   },
-  "permissions": ["tabs", "storage"],
+  "permissions": ["tabs", "storage", "https://api.github.com/*"],
+  "content_security_policy": "script-src 'self' https://api.github.com; object-src 'self'",
   "homepage_url":"https://github.com/doohwancho"
 }
 

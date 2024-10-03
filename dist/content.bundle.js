@@ -200,50 +200,83 @@ function getFormattedToday() {
 
 
 function setupCommitNumberObserver() {
-  var todaysCommitTagId; // Create a MutationObserver to watch for changes in the DOM
-
+  var todaysCommitTagId;
   var commitNumberObserver = new MutationObserver(function (mutationsList, observer) {
-    // Check if the element is available
     var element = document.querySelector('[data-date="' + MYAPP.src.formattedToday + '"]');
-    console.log("element: " + element);
 
     if (element) {
-      // If the element is found, get the attribute and disconnect the observer
       todaysCommitTagId = element.getAttribute('aria-labelledby');
-      console.log("todaysCommitTagId: " + todaysCommitTagId);
-      observer.disconnect(); // Stop observing once the element is found
+      observer.disconnect();
 
       if (todaysCommitTagId) {
-        //start second observer to find DOM that has today's commit number with id found by first observer
+        console.log("todaysCommitTagId:", todaysCommitTagId);
         specificElementObserver.observe(document, {
           childList: true,
           subtree: true
         });
       }
     }
-  }); // Create a second MutationObserver for the specific element
-
+  });
   var specificElementObserver = new MutationObserver(function (mutationsList, observer) {
-    console.log("todaysCommitTagId: " + todaysCommitTagId);
-    var specificElement = document.querySelector("#" + todaysCommitTagId);
-    console.log("specificElement: " + specificElement);
+    var specificElement = document.getElementById(todaysCommitTagId);
 
     if (specificElement) {
+      console.log("specificElement:", specificElement);
       var commitNumber = specificElement.textContent.split(" ")[0];
-      commitNumber = commitNumber === 'No' ? 0 : commitNumber;
-      console.log("commitNumber : " + commitNumber);
+      commitNumber = commitNumber === 'No' ? 0 : parseInt(commitNumber, 10);
       MYAPP.src.commitNumber = commitNumber > 7 ? 7 : commitNumber;
-      observer.disconnect(); // Stop observing once the element is found
+      console.log("my commit number:", MYAPP.src.commitNumber);
+      observer.disconnect();
+      injectLee(); // changeProfileToLee();
 
-      injectLee();
-      changeProfileToLee();
+      fetchGeohotCommits();
     }
-  }); // Start observing the document for changes
-
+  });
   commitNumberObserver.observe(document, {
     childList: true,
     subtree: true
   });
+}
+
+function fetchGeohotCommits() {
+  chrome.runtime.sendMessage({
+    action: "fetchGeohotCommits"
+  }, function (response) {
+    if (response.error) {
+      console.error('Error fetching geohot commits:', response.error);
+    } else {
+      console.log("Geohot's commit number:", response.commits);
+      var geohotCommitNumber = response.commits > 7 ? 7 : response.commits;
+      console.log("Geohot's commit number:", geohotCommitNumber);
+      injectGeohotLee(geohotCommitNumber);
+    }
+  });
+}
+
+function injectGeohotLee(commitNumber) {
+  if (!MYAPP.src.parent) {
+    console.error("Parent element not found");
+    return;
+  }
+
+  var geohotRockLeeDiv = document.createElement("div");
+  geohotRockLeeDiv.className = "rocklee-level".concat(commitNumber);
+  geohotRockLeeDiv.style.position = "relative";
+  geohotRockLeeDiv.style.top = geohotRockLeeDiv.style.left = commitNumber + "0%";
+  var label = document.createElement("div");
+  label.textContent = "geohot's commits";
+  label.style.textAlign = "center";
+  label.style.fontSize = "12px";
+  label.style.marginTop = "5px";
+  var container = document.createElement("div");
+  container.appendChild(geohotRockLeeDiv);
+  container.appendChild(label);
+
+  if (MYAPP.src.parent.firstChild) {
+    MYAPP.src.parent.insertBefore(container, MYAPP.src.parent.firstChild.nextSibling);
+  } else {
+    MYAPP.src.parent.appendChild(container);
+  }
 }
 /***************************************************
  * 3. Rock Lee Image
@@ -259,12 +292,6 @@ function injectLee() {
   //insert RockLee image DOM as first child of mt-4 DOM (right above git commit hitmap calendar)
 
   MYAPP.src.parent.insertBefore(rockLeeDiv, MYAPP.src.parent.firstChild);
-}
-
-function changeProfileToLee() {
-  var image = window.chrome.runtime.getURL("./dist/ProfileRockLee".concat(MYAPP.src.commitNumber, ".png"));
-  var imgTag = document.getElementsByClassName("tooltipped tooltipped-s d-block")[0].getElementsByTagName("img")[0];
-  imgTag.src = image;
 }
 /***************************************************
  * 4. Modal
@@ -596,13 +623,8 @@ function main() {
   */
   //2. get src
 
-  getFormattedToday(); // getTodayCommitNumber(); //deleted
-
-  setupCommitNumberObserver(); //replaced (DOMContentLoaded 시점에 타겟 DOM이 로드되지 않았기 때문에 observer 방식으로 변경)
-  //3. Rock Lee Image
-  // injectLee(); //setupCommitNumberObserver()안에서 실행되도록 편입됨
-  // changeProfileToLee(); //setupCommitNumberObserver()안에서 실행되도록 편입됨
-
+  getFormattedToday();
+  setupCommitNumberObserver();
   /*
     C. graph-formed skill tree
   */
