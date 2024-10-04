@@ -35,6 +35,8 @@ commit할 수록 록리가 점점 각성한다.
 
 ## c. 록리 대신 다른 캐릭터를 추가하고 싶다면?
 
-1. 원하는 캐릭터의 sprite image 파일을 구한다. ([naruto-sprite](https://www.spriters-resource.com/game_boy_advance/narutonc2/))
+1. 원하는 캐릭터의 sprite image 파일을 구한다. 
+    1. ([naruto-sprite](https://www.spriters-resource.com/game_boy_advance/narutonc2/))에서 sprite 이미지를 구한다.
+    2. [이 웹사이트](https://onlinepngtools.com/create-transparent-png)에서 특정 색깔을 투명하게 만들어 transparent image로 만든다.
 2. sprite image에서 레벨 별로 css-animation을 이용해서 gif처럼 보이게 만든다.
 3. RockLee.gif 대신 원하는 캐릭터.gif을 로드한다. 

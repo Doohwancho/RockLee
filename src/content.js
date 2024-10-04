@@ -3,7 +3,8 @@ import "./style.css";
 
 //image files
 import RockLeeImg from "/src/images/spreadsheets/RockLee2_transparent.gif";
-import RockLettImg2 from "/src/images/spreadsheets/RockLee3_transparent.png";
+import RockLeeImg2 from "/src/images/spreadsheets/RockLee3_transparent.png";
+import SasukeImg from "/src/images/spreadsheets/sasuke.png";
 // import RockLeeProfile0 from "/src/images/profile/ProfileRockLee0.png";
 // import RockLeeProfile1 from "/src/images/profile/ProfileRockLee1.png";
 // import RockLeeProfile2 from "/src/images/profile/ProfileRockLee2.png";
@@ -141,7 +142,7 @@ function fetchGeohotCommits() {
       console.log("Geohot's commit number:", response.commits);
       const geohotCommitNumber = response.commits > 7 ? 7 : response.commits;
       console.log("Geohot's commit number:", geohotCommitNumber);
-      injectGeohotLee(geohotCommitNumber);
+      injectGeohotzCharacter(geohotCommitNumber);
     }
   });
 }
@@ -162,25 +163,25 @@ function injectLee() {
   MYAPP.src.parent.insertBefore(rockLeeDiv, MYAPP.src.parent.firstChild); 
 }
 
-function injectGeohotLee(commitNumber) {
+function injectGeohotzCharacter(commitNumber) {
   if (!MYAPP.src.parent) {
     console.error("Parent element not found");
     return;
   }
 
-  let geohotRockLeeDiv = document.createElement("div");
-  geohotRockLeeDiv.className = `rocklee-level${commitNumber}`;
-  geohotRockLeeDiv.style.position = "relative";
-  geohotRockLeeDiv.style.top = geohotRockLeeDiv.style.left = commitNumber + "0%";
+  let geohotDiv = document.createElement("div");
+  geohotDiv.className = `sasuke-level${commitNumber}`;
+  geohotDiv.style.position = "relative";
+  geohotDiv.style.top = geohotDiv.style.left = commitNumber + "0%";
   
   let label = document.createElement("div");
-  label.textContent = "geohot's commits";
+  // label.textContent = "geohot's commits";
   label.style.textAlign = "center";
   label.style.fontSize = "12px";
   label.style.marginTop = "5px";
 
   let container = document.createElement("div");
-  container.appendChild(geohotRockLeeDiv);
+  container.appendChild(geohotDiv);
   container.appendChild(label);
 
   if (MYAPP.src.parent.firstChild) {
